@@ -1,0 +1,198 @@
+<html>
+    <head>
+        <title>Random Game Generator</title>
+        <style>
+            .firstrow {
+            background-color: #deeaf6;
+            font-size: 20px;
+          }
+          .secondrow{
+            background-color:  #F7CAAC;
+            font-size: 30px;
+          }
+          .thirdrow{
+            background-color:  #deeaf6;
+            padding: 10px;
+          }
+          .select{
+            text-align: center;
+            background-color: #deeaf6;
+          }
+          .center{
+            background-color: #FFF2CC;
+            font-size: 20px;
+            text-align: center;
+          }
+          button:hover{
+            border: 1px solid;
+          }
+          .middle{
+            text-align: center;
+            padding: 10px;
+          }
+          .click_btn{
+            background-color: #99FF99;
+            font-size: 30px;
+            border: none;
+          }
+          .forthrow{
+            background-color: #99FF99;
+          }
+          #currentScore{
+            color: red;
+            font-size: 27px;
+			      font-family:arial;
+          }
+          .first_Number, .second_Number, .third_Number{
+            font-size: 20px;
+            height: 80px;
+            width: 180px;
+          }
+          .changecolor1{
+            color: #F39C12;
+          }
+          .changecolor2{
+            color: blue;
+          }
+          .changecolor3{
+            color: #27AE60;
+          }
+        </style>
+
+    </head>
+    <body>
+        <table border="1" width="28%">
+            <tr>
+                <th colspan="3" width="30%" height="50px" class="secondrow">Number Game Generator</th>
+            </tr>
+
+            <tr>
+                <td class="thirdrow">Your chosen Number:</td>  
+                <td class="Select">
+                    <select id="selectNumber">
+						        <option value="0">0</option>
+						        <option value="1">1</option>
+						        <option value="2">2</option>
+						        <option value="3">3</option>
+						        <option value="4">4</option>
+						        <option value="5">5</option>
+						        <option value="6">6</option>
+						        <option value="7">7</option>
+						        <option value="8">8</option>
+						        <option value="9">9</option>	
+					      </select>
+                </td>
+
+                <!-- choose number-->
+
+                <td id="scores" class="center">
+                    <b>Current Score: </b><span id="currentScore" ><b> 0 </b></span>
+                </td>
+
+                <!--count scores-->
+            </tr>
+
+            <tr id="startend" class="forthrow">
+                <td colspan="3">
+                    <table class="nested">
+                        <tr>
+                            <td class="middle" style="width: 250px;" >
+                                <button id="start" class="click_btn" onclick="startCounterAnimation()">
+                                    Start
+                                </button>
+                            </td>
+                            
+                            <td class="middle" style="width: 250px;">
+                                <button id="end" class="click_btn" onclick="stopCounterAnimation()">
+                                    End
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="last">
+                    <button class="first_Number" id="1stNumber" onclick="check()"><span class="changeColor1">&lt;1st-Number&gt;</span></button>
+                </td>
+                <td class="last">
+                    <button class="second_Number" id="2ndNumber" onclick="check()"><span class="changeColor2">&lt;2nd-Number&gt;</span></button>
+                </td>
+                <td class="last">
+                    <button class="third_Number" id="3rdNumber" onclick="check()"><span class="changeColor3">&lt;3rd-Number&gt;</span></button>
+                </td>
+            </tr>
+        </table>
+    </body>
+
+    <script>
+    //https://stackoverflow.com/questions/11255219/use-a-javascript-array-to-fill-up-a-drop-down-select-box
+
+    //Use a for loop to iterate through your array. 
+    //For each string, create a new option element, assign the string as its innerHTML and value, 
+    //and then append it to the select element.
+    
+    const Numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]; //the array
+	  const colorArray = ["red","blue","purple","green","yellow","brown","orange","grey","pink","white"];
+	
+    //https://dev.to/areeburrub/randomly-sort-array-in-one-just-line-2oab
+
+    function shuffleNumber() { 
+        var randomNumber = Numbers.sort(function(){
+            return 0.5 - Math.random()
+        });       
+        //.sort() is a function in javascript which usually sort the array on the 
+        //basis of the String value in ascending order b)y default.
+
+        //how compare function works is when it take two positions from array and 
+        //store into the function if it returs positve value don't change the order and vice versa.
+	      var one = document.getElementById("1stNumber");
+        var two = document.getElementById("2ndNumber");
+        var three = document.getElementById("3rdNumber");
+        one.innerHTML=randomNumber[0];
+        two.innerHTML=randomNumber[1];
+        three.innerHTML=randomNumber[2];  
+		
+
+		    fillOptions("1stNumber");fillOptions("2ndNumber");fillOptions("3rdNumber");
+		    // fillOptions fills the random number background based on the number. 0 = red, 1 = blue.. etc;
+    }
+
+    var alertSchedule;
+
+    function startCounterAnimation(){
+		  document.getElementById("currentScore").innerText = 0;	// reset/set score
+	
+      alertSchedule = setInterval(shuffleNumber, 2000);	//calling shuffleNumber function for every 2000 miliseconds
+		  document.getElementById("selectNumber").disabled = true; //disable select list, so the user is unable to change their selected number while playing
+    }
+
+    function stopCounterAnimation(){
+      clearInterval(alertSchedule); 	//	stops game
+		  document.getElementById("selectNumber").disabled = false; //enable select list, user able to change selected number
+    }
+    
+    function correctNum(){
+		  document.getElementById("currentScore").innerText = Number(document.getElementById("currentScore").innerText) + 4;
+	  }
+	
+	  function wrongNum(){
+		  document.getElementById("currentScore").innerText = Number(document.getElementById("currentScore").innerText) - 3;
+	  }
+	
+	  function check(){
+		  thisBoxValue = document.getElementById(event.target.id).innerText;
+		  if(thisBoxValue == selectNumber.value){
+		  correctNum();	//increase score by 4
+		  }
+		  else {
+        wrongNum();		//decrease score by 3
+      }
+	}
+	
+	  function fillOptions(ID){
+		  document.getElementById(ID).style.backgroundColor = colorArray[document.getElementById(ID).textContent];
+	  }
+    </script>
+</html>
